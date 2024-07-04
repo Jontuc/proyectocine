@@ -6,6 +6,7 @@ package com.mycompany.spi.proyectocine.service;
 
 
 import com.mycompany.spi.proyectocine.model.*;
+import com.mycompany.spi.proyectocine.persistence.AsientoDAO;
 import com.mycompany.spi.proyectocine.persistence.PeliculaDAO;
 import com.mycompany.spi.proyectocine.persistence.FuncionDAO;
 
@@ -19,6 +20,7 @@ import java.util.List;
 public class CinemaService {
     private PeliculaDAO peliculaDAO = new PeliculaDAO();
     private FuncionDAO funcionDAO = new FuncionDAO();
+    private AsientoDAO asientoDAO = new AsientoDAO();
 
     private List<Funcion> funciones = new ArrayList<>();
     private List<Asiento> asientos = new ArrayList<>();
@@ -38,8 +40,10 @@ public class CinemaService {
     public List<Funcion> obtenerTodasLasFunciones(){
         return funcionDAO.getAll();
     }
-
-
+    
+    public List<Asiento> obtenerTodosLosAsientos(){
+        return asientoDAO.getAll();
+    }
 
     public List<Funcion> buscarFuncionesPorPelicula(int peliculaId) {
         this.funciones = this.obtenerTodasLasFunciones();
@@ -53,9 +57,10 @@ public class CinemaService {
     }
 
     public Asiento[] obtenerAsientosDisponibles(int funcionId) {
+        this.asientos = this.obtenerTodosLosAsientos();
         List<Asiento> disponibles = new ArrayList<>();
         for (Asiento asiento : asientos) {
-            if (asiento.getFuncion().getId() == funcionId && asiento.getEstado().equals("disponible")) {
+            if (asiento.getFuncionId() == funcionId && asiento.getEstado().equals("disponible")) {
                 disponibles.add(asiento);
             }
         }
@@ -63,6 +68,9 @@ public class CinemaService {
     }
 
     public void comprarAsiento(int asientoId) {
+        if (this.asientos == null) {
+            this.asientos = this.obtenerTodosLosAsientos();
+        }
         for (Asiento asiento : asientos) {
             if (asiento.getId() == asientoId) {
                 asiento.setEstado("vendido");

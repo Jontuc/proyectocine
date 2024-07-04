@@ -87,7 +87,7 @@ public class SpiProyectocine {
         int funcionId = scanner.nextInt();
         Asiento[] asientos = cinemaController.getAsientosDisponibles(funcionId);
         for (Asiento asiento : asientos) {
-            System.out.println(asiento);
+            System.out.println("\nAsiento nro: "+asiento.getId()+"\tFuncion: "+ asiento.getFuncionId() + "\tEstado: " + asiento.getEstado()+"\n");
         }
     }
 
